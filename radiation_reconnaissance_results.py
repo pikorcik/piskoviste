@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, Qt
-from PyQt4.QtGui import QAction, QIcon
+from PyQt4.QtGui import QAction, QIcon, QToolButton
 # Initialize Qt resources from file resources.py
 import resources
 
@@ -72,6 +72,10 @@ class RadiationReconnaissanceResults:
 
         self.pluginIsActive = False
         self.dockwidget = None
+
+        # add plugin icon into plugin toolbar
+        self.toolButton = QToolButton()
+        self.iface.addToolBarWidget(self.toolButton)
 
 
     # noinspection PyMethodMayBeStatic
@@ -142,6 +146,7 @@ class RadiationReconnaissanceResults:
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
+        self.toolButton.setDefaultAction(action)
         action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
 
@@ -152,7 +157,7 @@ class RadiationReconnaissanceResults:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
-            self.toolbar.addAction(action)
+            pass
 
         if add_to_menu:
             self.iface.addPluginToMenu(
@@ -163,18 +168,17 @@ class RadiationReconnaissanceResults:
 
         return action
 
-
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
         icon_path = ':/plugins/RadiationReconnaissanceResults/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'It generates polygons from grid'),
+            text=self.tr(u'Radiation Reconnaissance Results'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def onClosePlugin(self):
         """Cleanup necessary items here when plugin dockwidget is closed"""
@@ -192,7 +196,6 @@ class RadiationReconnaissanceResults:
 
         self.pluginIsActive = False
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
 
@@ -206,7 +209,7 @@ class RadiationReconnaissanceResults:
         # remove the toolbar
         del self.toolbar
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def run(self):
         """Run method that loads and starts the plugin"""
